@@ -39,7 +39,7 @@ rubiks_cube = {
 }
 
 # Perform the U move
-#perform_u_move(rubiks_cube)
+perform_u_move(rubiks_cube)
 
 # Perform the D move
 #erform_d_move(rubiks_cube)
@@ -48,7 +48,7 @@ rubiks_cube = {
 #perform_r_move(rubiks_cube)
 
 # Perform the L move
-perform_l_move(rubiks_cube)
+#perform_l_move(rubiks_cube)
 
 
 # Print the updated cube
