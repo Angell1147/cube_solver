@@ -16,7 +16,7 @@ def set_box_color(btn, position):
     Set the color of the clicked box to the currently selected color and print position.
     """
     if selected_color:
-        btn.configure(bg="pink")  # Solid border for better visibility
+        btn.configure(bg=selected_color)  # Solid border for better visibility
         print(f"Button at {position} set to {selected_color}")  # Print the position and color
     else:
         print("No color selected!")
