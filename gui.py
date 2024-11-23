@@ -36,7 +36,8 @@ rubiks_cube = {
 
 selected_color = None
 
-# def submit_handler()
+def on_submit():
+    print("Good job done! ")
 
 def select_color(color):
     """
@@ -132,6 +133,18 @@ def create_cube_gui():
             command=lambda c=color: select_color(c)  # Select color for future button clicks
         )
         btn.pack(pady=5)
+
+    submit_btn = tk.Button(
+        root,
+        text="Submit",
+        font=("Arial", 12, "bold"),
+        bg="lightblue",
+        width=12,
+        height=2,
+        command=on_submit  # Bind the button to the on_submit function
+    )
+    
+    submit_btn.grid(row=9, column=5, columnspan=3, pady=10)
 
     # Start the main event loop
     root.mainloop()
