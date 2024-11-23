@@ -36,8 +36,42 @@ rubiks_cube = {
 
 selected_color = None
 
-def on_submit():
+def on_submit(color_key_frame, navigation_frame):
     print("Good job done! ")
+    
+    # Clear the color key frame
+    for widget in color_key_frame.winfo_children():
+        widget.destroy()
+
+    # Add "Prev" and "Next" buttons to the navigation frame
+    next_btn = tk.Button(
+        navigation_frame,
+        text="Next",
+        font=("Arial", 12, "bold"),
+        bg="lightblue",
+        width=10,
+        height=2,
+        command=on_next  # Bind the button to the on_next function
+    )
+    next_btn.pack(pady=10)
+
+    prev_btn = tk.Button(
+        navigation_frame,
+        text="Prev",
+        font=("Arial", 12, "bold"),
+        bg="lightblue",
+        width=10,
+        height=2,
+        command=on_prev  # Bind the button to the on_prev function
+    )
+    prev_btn.pack(pady=10)
+
+def on_next():
+    print("Next button clicked!")
+
+def on_prev():
+    print("Prev button clicked!")
+
 
 def select_color(color):
     """
@@ -133,6 +167,9 @@ def create_cube_gui():
             command=lambda c=color: select_color(c)  # Select color for future button clicks
         )
         btn.pack(pady=5)
+    # Create a navigation frame (initially empty)
+    navigation_frame = tk.Frame(root)
+    navigation_frame.grid(row=0, column=12, rowspan=9, padx=10)
 
     submit_btn = tk.Button(
         root,
@@ -141,7 +178,7 @@ def create_cube_gui():
         bg="lightblue",
         width=12,
         height=2,
-        command=on_submit  # Bind the button to the on_submit function
+        command=lambda: on_submit(color_key_frame, navigation_frame)
     )
     
     submit_btn.grid(row=9, column=5, columnspan=3, pady=10)
