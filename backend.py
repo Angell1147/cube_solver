@@ -286,44 +286,47 @@ rubiks_cube = {
     ]
 }
 
-scrambled_cube = convert_to_kociemba_notation(rubiks_cube)
-try:
-    solution = kociemba.solve(scrambled_cube)
-    print("Solution:", solution)
-except Exception as e:
-    print(f"Error solving the cube: {e}")
 
-print("\n\n\n\n\n\n\n\n\n\n")
-
-for move in solution.strip().split():
-    print(f"Executing move: {move}")
-    rubiks_cube = execute_move(rubiks_cube, move)
-    show(rubiks_cube) 
-    print("\n\n\n\n")
-
-
-
-
-
-
-rubiks_cube2 = get_cube_input()
-if rubiks_cube2:
-    show(rubiks_cube2)
-    print("\n\n\n\n\n\n")
-    scrambled_cube = convert_to_kociemba_notation(rubiks_cube2)
+if __name__=="__main__":
+    scrambled_cube = convert_to_kociemba_notation(rubiks_cube)
     try:
         solution = kociemba.solve(scrambled_cube)
         print("Solution:", solution)
     except Exception as e:
-        print(f"Error solving the cube: {e} 22")
+        print(f"Error solving the cube: {e}")
 
     print("\n\n\n\n\n\n\n\n\n\n")
 
     for move in solution.strip().split():
         print(f"Executing move: {move}")
-        rubiks_cube = execute_move(rubiks_cube2, move)
-        show(rubiks_cube2)  
+        rubiks_cube = execute_move(rubiks_cube, move)
+        show(rubiks_cube) 
         print("\n\n\n\n")
 
-else:
-    print("Invalid cube input. Please try again.")
+
+
+
+
+
+    rubiks_cube2 = get_cube_input()
+    if rubiks_cube2:
+        show(rubiks_cube2)
+        print("\n\n\n\n\n\n")
+        scrambled_cube = convert_to_kociemba_notation(rubiks_cube2)
+        try:
+            solution = kociemba.solve(scrambled_cube)
+            print("Solution:", solution)
+        except Exception as e:
+            print(f"Error solving the cube: {e} 22")
+
+        print("\n\n\n\n\n\n\n\n\n\n")
+
+        for move in solution.strip().split():
+            print(f"Executing move: {move}")
+            rubiks_cube = execute_move(rubiks_cube2, move)
+            show(rubiks_cube2)  
+            print("\n\n\n\n")
+
+    else:
+        print("Invalid cube input. Please try again.")
+

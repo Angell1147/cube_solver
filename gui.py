@@ -1,43 +1,93 @@
 import tkinter as tk
+import backend
+
+def validate_scrambled_state(scrambled_state):
+    """
+    Validates a scrambled Rubik's Cube state.
+    :param scrambled_state: A string of 54 characters representing the scrambled cube.
+    :return: Tuple (is_valid: bool, message: str).
+    """
+    # Expected characters for a Rubik's Cube
+    valid_faces = ['F', 'R', 'B', 'L', 'U', 'D']
+
+    # 1. Check if the length is 54
+    if len(scrambled_state) != 54:
+        return False, f"Invalid state length: {len(scrambled_state)}. It must be exactly 54 characters long."
+
+    # 2. Check if only valid characters are used
+    invalid_characters = [char for char in scrambled_state if char not in valid_faces]
+    if invalid_characters:
+        return False, f"Invalid characters found: {invalid_characters}. Only 'F', 'R', 'B', 'L', 'U', 'D' are allowed."
+
+    # 3. Check if each face appears exactly 9 times
+    face_counts = {face: scrambled_state.count(face) for face in valid_faces}
+    if any(count != 9 for count in face_counts.values()):
+        return False, f"Invalid face counts: {face_counts}. Each face must appear exactly 9 times."
+
+    # If all checks pass
+    return True, "Valid scrambled state."
+
+
 
 # Global variable to store the currently selected color
 rubiks_cube = {
     "U": [  
-        ["R", "R", "B"],
-        ["B", "W", "O"],
-        ["B", "W", "O"]
+        ["W", "W", "W"],
+        ["W", "W", "W"],
+        ["W", "W", "W"]
     ],
     "F": [  
-        ["W", "G", "B"],
-        ["R", "R", "W"],
-        ["G", "Y", "W"]
+        ["W", "W", "W"],
+        ["W", "W", "W"],
+        ["W", "W", "W"]
     ],
     "R": [  
-        ["Y", "Y", "R"],
-        ["B", "B", "W"],
-        ["R", "R", "R"]
+        ["W", "W", "W"],
+        ["W", "W", "W"],
+        ["W", "W", "W"]
     ],
     "B": [  
-        ["Y", "B", "B"],
-        ["R", "O", "O"],
-        ["Y", "O", "O"]
+        ["W", "W", "W"],
+        ["W", "W", "W"],
+        ["W", "W", "W"]
     ],
     "L": [  
-        ["W", "O", "O"],
-        ["W", "G", "Y"],
-        ["W", "G", "O"]
+        ["W", "W", "W"],
+        ["W", "W", "W"],
+        ["W", "W", "W"]
     ],
     "D": [  
-        ["Y", "B", "G"],
-        ["Y", "Y", "G"],
-        ["G", "G", "G"]
+        ["W", "W", "W"],
+        ["W", "W", "W"],
+        ["W", "W", "W"]
     ]
 }
 
 selected_color = None
+solution = None
+counter = 0
+
+def next_handeler():
+    global counter
+    global solution
+
 
 def on_submit():
-    print("Good job done! ")
+    global solution
+    scrambled_string = backend.convert_to_kociemba_notation(rubiks_cube)
+    backend.show(rubiks_cube)
+    print(scrambled_string)
+    boolen, msg = validate_scrambled_state(scrambled_string)
+    print(boolen, msg)
+    try:
+        solution = backend.kociemba.solve(scrambled_string)
+        print("Solution:", solution)
+        # for move in solution:
+        #     print(f"Executing move: {move}")
+        #     rubiks_cube = backend.execute_move(rubiks_cube, move)  
+        #     print("\n\n\n\n")
+    except Exception as e:
+        print(f"Error solving the cube: {e} 22")
 
 def select_color(color):
     """
@@ -52,7 +102,7 @@ def set_box_color(btn, position):
     Set the color of the clicked box to the currently selected color and print position.
     """
     global rubiks_cube 
-    rubiks_cube[position["face"]][position["indx"][0]][position["indx"][1]] = select_color[0].upper()
+    rubiks_cube[position["face"]][position["indx"][0]][position["indx"][1]] = selected_color[0].upper()
     if selected_color:
         btn.configure(bg=selected_color)  # Solid border for better visibility
         print(f"Button at {position} set to {selected_color}")  # Print the position and color
