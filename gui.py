@@ -30,7 +30,7 @@ def validate_scrambled_state(scrambled_state):
 
 
 # Global variable to store the currently selected color
-rubiks_cube = {
+GUI_rubiks_cube = {
     "U": [  
         ["W", "W", "W"],
         ["W", "W", "W"],
@@ -63,29 +63,24 @@ rubiks_cube = {
     ]
 }
 
+buttons = []
+
 selected_color = None
 solution = None
 counter = 0
-
-def next_handeler():
-    global counter
-    global solution
+flag=False
 
 
 def on_submit(color_key_frame, navigation_frame):
-    global solution
-    scrambled_string = backend.convert_to_kociemba_notation(rubiks_cube)
-    backend.show(rubiks_cube)
+    global solution, GUI_rubiks_cube, flag
+    scrambled_string = backend.convert_to_kociemba_notation(GUI_rubiks_cube)
+    backend.show(GUI_rubiks_cube)
     print(scrambled_string)
     boolen, msg = validate_scrambled_state(scrambled_string)
     print(boolen, msg)
     try:
-        solution = backend.kociemba.solve(scrambled_string)
-        print("Solution:", solution)
-        # for move in solution:
-        #     print(f"Executing move: {move}")
-        #     rubiks_cube = backend.execute_move(rubiks_cube, move)  
-        #     print("\n\n\n\n")
+        temp = backend.kociemba.solve(scrambled_string)
+        solution = temp.strip().split()
     except Exception as e:
         print(f"Error solving the cube: {e} 22")
     
@@ -101,7 +96,7 @@ def on_submit(color_key_frame, navigation_frame):
         bg="lightblue",
         width=10,
         height=2,
-        command=on_next  # Bind the button to the on_next function
+        command= lambda : on_next()  # Bind the button to the on_next function
     )
     next_btn.pack(pady=10)
 
@@ -112,15 +107,88 @@ def on_submit(color_key_frame, navigation_frame):
         bg="lightblue",
         width=10,
         height=2,
-        command=on_prev  # Bind the button to the on_prev function
+        command= lambda :on_prev()  # Bind the button to the on_prev function
     )
     prev_btn.pack(pady=10)
+    print(True)
+    flag=True
+
+def refresh_gui(buttons):
+    """
+    Refresh the button colors to match the current state of the rubik's cube.
+    :param buttons: List of all buttons representing the cube.
+    """
+    global GUI_rubiks_cube
+
+    # Mapping from cube face to button indices in the grid
+    face_layout = {
+        "U": (0, 3),  # Top face
+        "L": (3, 0),  # Left face
+        "F": (3, 3),  # Front face
+        "R": (3, 6),  # Right face
+        "B": (3, 9),  # Back face
+        "D": (6, 3),  # Bottom face
+    }
+
+    color_map = {
+        "W": "white",  # White for "U"
+        "R": "red",    # Red for "F"
+        "B": "blue",   # Blue for "R"
+        "O": "orange", # Orange for "B"
+        "G": "green",  # Green for "L"
+        "Y": "yellow"  # Yellow for "D"
+    }
+
+    # Update each button color based on the cube state
+    indx=0
+    for face, (row_offset, col_offset) in face_layout.items():
+        for i in range(3):
+            for j in range(3):
+                color = color_map[GUI_rubiks_cube[face][i][j]]  # Get color for the cube facelet
+                print(color, indx)
+                buttons[indx].configure(bg=color) 
+                indx+=1   
+  
+
+
 
 def on_next():
-    print("Next button clicked!")
+    """
+    Navigate to the next move in the solution and update the GUI.
+    :param buttons: List of buttons representing the cube.
+    """
+    print("reached")
+    if flag:
+        global counter, solution, GUI_rubiks_cube, buttons
+        print(solution)
+
+        if solution and counter < len(solution):
+            move = solution[counter]
+            GUI_rubiks_cube = backend.execute_move(GUI_rubiks_cube, move)  # Update cube state
+            backend.show(GUI_rubiks_cube)
+            counter += 1
+            print(f"Executed: {move}")
+
+            # Refresh the GUI
+            refresh_gui(buttons)
 
 def on_prev():
-    print("Prev button clicked!")
+    """
+    Navigate to the previous move in the solution and update the GUI.
+    """
+    if flag:
+        global counter, solution, GUI_rubiks_cube, buttons
+        print(solution)
+
+        if solution and counter > 0:
+            counter -= 1
+            move = solution[counter]
+            GUI_rubiks_cube = backend.execute_move(GUI_rubiks_cube, move)  # Update cube state in reverse
+            backend.show(GUI_rubiks_cube)
+            print(f"Reversed: {move}")
+
+            # Refresh the GUI
+            refresh_gui(buttons)
 
 
 def select_color(color):
@@ -135,11 +203,10 @@ def set_box_color(btn, position):
     """
     Set the color of the clicked box to the currently selected color and print position.
     """
-    global rubiks_cube 
-    rubiks_cube[position["face"]][position["indx"][0]][position["indx"][1]] = selected_color[0].upper()
+    global GUI_rubiks_cube 
+    GUI_rubiks_cube[position["face"]][position["indx"][0]][position["indx"][1]] = selected_color[0].upper()
     if selected_color:
         btn.configure(bg=selected_color)  # Solid border for better visibility
-        print(f"Button at {position} set to {selected_color}")  # Print the position and color
     else:
         print("No color selected!")
 
@@ -159,7 +226,7 @@ def create_cube_gui():
     }
 
     # Create the Rubik's Cube grid
-    buttons = []
+    global buttons 
     for face, (row_offset, col_offset) in layout.items():
         for i in range(3):
             for j in range(3):
