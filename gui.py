@@ -1,7 +1,42 @@
 import tkinter as tk
 
 # Global variable to store the currently selected color
+rubiks_cube = {
+    "U": [  
+        ["R", "R", "B"],
+        ["B", "W", "O"],
+        ["B", "W", "O"]
+    ],
+    "F": [  
+        ["W", "G", "B"],
+        ["R", "R", "W"],
+        ["G", "Y", "W"]
+    ],
+    "R": [  
+        ["Y", "Y", "R"],
+        ["B", "B", "W"],
+        ["R", "R", "R"]
+    ],
+    "B": [  
+        ["Y", "B", "B"],
+        ["R", "O", "O"],
+        ["Y", "O", "O"]
+    ],
+    "L": [  
+        ["W", "O", "O"],
+        ["W", "G", "Y"],
+        ["W", "G", "O"]
+    ],
+    "D": [  
+        ["Y", "B", "G"],
+        ["Y", "Y", "G"],
+        ["G", "G", "G"]
+    ]
+}
+
 selected_color = None
+
+# def submit_handler()
 
 def select_color(color):
     """
@@ -15,6 +50,8 @@ def set_box_color(btn, position):
     """
     Set the color of the clicked box to the currently selected color and print position.
     """
+    global rubiks_cube 
+    rubiks_cube[position["face"]][position["indx"][0]][position["indx"][1]] = select_color[0].upper()
     if selected_color:
         btn.configure(bg=selected_color)  # Solid border for better visibility
         print(f"Button at {position} set to {selected_color}")  # Print the position and color
@@ -42,7 +79,8 @@ def create_cube_gui():
         for i in range(3):
             for j in range(3):
                 # Define the button's position in the grid
-                position = f"{face}-{i},{j}"
+                position = {"face":face,
+                            "indx":[i,j]}
 
                 # Create the button
                 btn = tk.Button(
