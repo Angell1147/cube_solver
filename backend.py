@@ -1,4 +1,3 @@
-from rubik_solver import utils
 import kociemba
 
 
