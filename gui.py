@@ -158,6 +158,7 @@ def reset(color_key_frame, navigation_frame, message_label, submit_btn):
 def create_cube_gui():
     root = tk.Tk()
     root.title("Rubik's Cube GUI")
+    root.geometry("800x650")
     layout = {
         "U": (0, 3), "L": (3, 0), "F": (3, 3),
         "R": (3, 6), "B": (3, 9), "D": (6, 3)
@@ -174,6 +175,8 @@ def create_cube_gui():
                 btn.grid(row=row_offset + i, column=col_offset + j, padx=1, pady=1)
                 buttons.append(btn)
     refresh_gui(buttons=buttons)
+    for btn in buttons:
+        btn.config(width=6, height=3)
     color_key_frame = tk.Frame(root)
     color_key_frame.grid(row=0, column=12, rowspan=9, padx=10)
 
@@ -201,13 +204,19 @@ def create_cube_gui():
     submit_btn.grid(row=9, column=5, columnspan=3, pady=10)
 
 
-    try:
-        notation_image = PhotoImage(file="notation.png")
-        image_label = tk.Label(root, image=notation_image)
-        image_label.image = notation_image  # Keep a reference to avoid garbage collection
-        image_label.grid(row=11, column=0, columnspan=12, pady=10)  # Place the image at the bottom
-    except Exception as e:
-        print(f"Error loading image: {e}")
+    # try:
+    #     # notation_image = PhotoImage(file="notation.png")
+    #     # notation_image = notation_image.subsample(2, 2)  # Adjust the subsample values as needed
+    #     # # image_label = tk.Label(root, image=notation_image)
+    #     # # image_label.image = notation_image  # Keep a reference to avoid garbage collection
+    #     # # image_label.grid(row=11, column=0, columnspan=12, pady=10)  # Place the image at the bottom
+    #     notation_image = PhotoImage(file="notation.png")
+    #     notation_image = notation_image.subsample(notation_image.width() // 600, notation_image.height() // 600)
+    #     image_label = tk.Label(root, image=notation_image)
+    #     image_label.image = notation_image  # Keep a reference to avoid garbage collection
+    #     image_label.grid(row=11, column=0, columnspan=12, pady=10)  # Place the image at the bottom
+    # except Exception as e:
+    #     print(f"Error loading image: {e}")
 
 
     root.mainloop()
