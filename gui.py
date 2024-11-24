@@ -1,6 +1,7 @@
 import tkinter as tk
 import backend
 from tkinter import PhotoImage
+from PIL import Image, ImageTk
 
 def validate_scrambled_state(scrambled_state):
     valid_faces = ['F', 'R', 'B', 'L', 'U', 'D']
@@ -202,12 +203,17 @@ def create_cube_gui():
 
 
     try:
-        notation_image = PhotoImage(file="notation.png")
+        original_image = Image.open("notation.png")
+        resized_image = original_image.resize((900, 300), Image.Resampling.LANCZOS)  # Adjust size (width, height)
+        notation_image = ImageTk.PhotoImage(resized_image)
+
+        # Display the image in the GUI
         image_label = tk.Label(root, image=notation_image)
         image_label.image = notation_image  # Keep a reference to avoid garbage collection
-        image_label.grid(row=11, column=0, columnspan=12, pady=10)  # Place the image at the bottom
+        image_label.grid(row=11, column=0, columnspan=12, pady=10)
     except Exception as e:
         print(f"Error loading image: {e}")
+
 
 
     root.mainloop()
