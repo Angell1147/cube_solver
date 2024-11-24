@@ -31,11 +31,11 @@ flag = False
 def translate_move(move):
     face_map = {"U": "Up", "F": "Front", "R": "Right", "B": "Back", "L": "Left", "D": "Down"}
     if len(move) == 1:
-        return f"Rotate the {face_map[move]} face by 90 degrees in clockwise direction."
+        return f"{move}: Rotate the {face_map[move]} face by 90 degrees in clockwise direction."
     elif move.endswith("'"):
-        return f"Rotate the {face_map[move[0]]} face by 90 degrees in counterclockwise direction."
+        return f"{move}: Rotate the {face_map[move[0]]} face by 90 degrees in counterclockwise direction."
     elif move.endswith("2"):
-        return f"Rotate the {face_map[move[0]]} face by 180 degrees in clockwise direction."
+        return f"{move}: Rotate the {face_map[move[0]]} face by 180 degrees in clockwise direction."
     return "Invalid move."
 
 def on_submit(color_key_frame, navigation_frame, message_label, submit_btn):
