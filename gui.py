@@ -40,6 +40,7 @@ def translate_move(move):
 
 def on_submit(color_key_frame, navigation_frame, message_label, submit_btn):
     global solution, GUI_rubiks_cube, flag
+    backend.show(GUI_rubiks_cube)
     if not flag:
         navigation_frame.grid(row=0, column=12, rowspan=9, padx=10)
         scrambled_string = backend.convert_to_kociemba_notation(GUI_rubiks_cube)
@@ -65,6 +66,8 @@ def on_submit(color_key_frame, navigation_frame, message_label, submit_btn):
                 flag = True
             except Exception as e:
                 message_label.config(text=f"Error solving the cube: {e}")
+                flag = False
+                navigation_frame.grid_forget(row=0, column=12, rowspan=9, padx=10)
     else:
         reset(color_key_frame, navigation_frame, message_label, submit_btn)
 
