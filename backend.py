@@ -31,46 +31,81 @@ def show(cube):
 
 
 
-def execute_move(cube, move):
-    if move == "U":
+def execute_move(cube, move, reversed=False):
+    """
+    Executes a move or its reverse on the Rubik's Cube.
+
+    :param cube: The current state of the Rubik's Cube.
+    :param move: The move to execute (e.g., "U", "U2", "U'").
+    :param reversed: Boolean, if True, executes the reverse of the given move.
+    :return: Updated cube state after applying the move.
+    """
+    # Reverse move mapping
+    reverse_moves = {
+        "U": "U'",
+        "U'": "U",
+        "U2": "U2",
+        "R": "R'",
+        "R'": "R",
+        "R2": "R2",
+        "F": "F'",
+        "F'": "F",
+        "F2": "F2",
+        "L": "L'",
+        "L'": "L",
+        "L2": "L2",
+        "D": "D'",
+        "D'": "D",
+        "D2": "D2",
+        "B": "B'",
+        "B'": "B",
+        "B2": "B2",
+    }
+
+    # Determine the actual move to execute
+    actual_move = reverse_moves[move] if reversed else move
+
+    # Execute the appropriate move
+    if actual_move == "U":
         return U(cube)
-    elif move == "U2":
+    elif actual_move == "U2":
         return U2(cube)
-    elif move == "U'":
+    elif actual_move == "U'":
         return Up(cube)
-    elif move == "R":
+    elif actual_move == "R":
         return R(cube)
-    elif move == "R2":
+    elif actual_move == "R2":
         return R2(cube)
-    elif move == "R'":
+    elif actual_move == "R'":
         return Rp(cube)
-    elif move == "F":
+    elif actual_move == "F":
         return F(cube)
-    elif move == "F2":
+    elif actual_move == "F2":
         return F2(cube)
-    elif move == "F'":
+    elif actual_move == "F'":
         return Fp(cube)
-    elif move == "L":
+    elif actual_move == "L":
         return L(cube)
-    elif move == "L2":
+    elif actual_move == "L2":
         return L2(cube)
-    elif move == "L'":
+    elif actual_move == "L'":
         return Lp(cube)
-    elif move == "D":
+    elif actual_move == "D":
         return D(cube)
-    elif move == "D2":
+    elif actual_move == "D2":
         return D2(cube)
-    elif move == "D'":
+    elif actual_move == "D'":
         return Dp(cube)
-    elif move == "B":
+    elif actual_move == "B":
         return B(cube)
-    elif move == "B2":
+    elif actual_move == "B2":
         return B2(cube)
-    elif move == "B'":
+    elif actual_move == "B'":
         return Bp(cube)
     else:
-        print(f"Unknown move: {move}")
+        print(f"Unknown move: {actual_move}")
         return cube
+
 
 
 def convert_to_kociemba_notation(cube):
