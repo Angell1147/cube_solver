@@ -40,14 +40,14 @@ def translate_move(move):
 
 def on_submit(color_key_frame, navigation_frame, message_label, submit_btn):
     global solution, GUI_rubiks_cube, flag
-    backend.show(GUI_rubiks_cube)
+    # backend.show(GUI_rubiks_cube)
     if not flag:
-        navigation_frame.grid(row=0, column=12, rowspan=9, padx=10)
         scrambled_string = backend.convert_to_kociemba_notation(GUI_rubiks_cube)
         boolen, msg = validate_scrambled_state(scrambled_string)
         message_label.config(text=msg)
         if boolen:
             try:
+                navigation_frame.grid(row=0, column=12, rowspan=9, padx=10)
                 temp = backend.kociemba.solve(scrambled_string)
                 solution = temp.strip().split()
                 for widget in color_key_frame.winfo_children():
@@ -106,6 +106,78 @@ def on_prev(message_label):
         GUI_rubiks_cube = backend.execute_move(GUI_rubiks_cube, move, reversed=True)
         refresh_gui(buttons)
         message_label.config(text=translate_move(move))
+
+
+def reload(color_key_frame, navigation_frame, message_label, submit_btn):
+    global GUI_rubiks_cube, buttons, selected_color, solution, counter, flag
+    GUI_rubiks_cube = {key: [["W"] * 3 for _ in range(3)] for key in GUI_rubiks_cube}
+    refresh_gui(buttons)
+    
+    for widget in navigation_frame.winfo_children():
+        widget.destroy()
+    
+    for widget in color_key_frame.winfo_children():
+        widget.destroy()
+    navigation_frame.grid_forget()
+    # Reinitialize color-picking options
+    colors = {
+        "white": "U (White)", "red": "F (Red)", "blue": "R (Blue)",
+        "orange": "B (Orange)", "green": "L (Green)", "yellow": "D (Yellow)"
+    }
+    tk.Label(color_key_frame, text="Color Key:", font=("Arial", 12, "bold")).pack(pady=5)
+    for color, label in colors.items():
+        tk.Button(
+            color_key_frame,
+            bg=color,
+            text=label,
+            width=12,
+            height=2,
+            relief="raised",
+            command=lambda c=color: select_color(c)  # Rebind color selection
+        ).pack(pady=5)
+        
+
+    solution = None
+    counter = 0
+    flag = False
+    selected_color = None
+    submit_btn.config(text="Submit")
+    message_label.config(text="Reset complete. Redesign the cube.")
+
+
+
+def on_click(color_key_frame, navigation_frame, message_label, submit_btn):
+    global solution, GUI_rubiks_cube, flag
+    if not flag:
+        scrambled_string = backend.convert_to_kociemba_notation(GUI_rubiks_cube)
+        boolen, msg = validate_scrambled_state(scrambled_string)
+        message_label.config(text=msg)
+        if boolen:
+            try:
+                navigation_frame.grid(row=0, column=12, rowspan=9, padx=10)
+                temp = backend.kociemba.solve(scrambled_string)
+                solution = temp.strip().split()
+                for widget in color_key_frame.winfo_children():
+                    widget.destroy()
+                next_btn = tk.Button(
+                    navigation_frame, text="Next", font=("Arial", 12, "bold"),
+                    bg="lightblue", width=10, height=2, command=lambda: on_next(message_label)
+                )
+                next_btn.pack(pady=10)
+                prev_btn = tk.Button(
+                    navigation_frame, text="Prev", font=("Arial", 12, "bold"),
+                    bg="lightblue", width=10, height=2, command=lambda: on_prev(message_label)
+                )
+                prev_btn.pack(pady=10)
+                submit_btn.config(text="Reset")
+                flag = True
+            except Exception as e:
+                message_label.config(text=f"Error solving the cube: {e}")
+                flag = False
+                navigation_frame.grid_forget(row=0, column=12, rowspan=9, padx=10)
+    else:
+        reset(color_key_frame, navigation_frame, message_label, submit_btn)
+
 
 def select_color(color):
     global selected_color
