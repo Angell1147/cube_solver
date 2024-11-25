@@ -1,18 +1,6 @@
 import tkinter as tk
 import backend
 
-def validate_scrambled_state(scrambled_state):
-    valid_faces = ['F', 'R', 'B', 'L', 'U', 'D']
-    if len(scrambled_state) != 54:
-        return False, f"Invalid state length: {len(scrambled_state)}. It must be exactly 54 characters long."
-    invalid_characters = [char for char in scrambled_state if char not in valid_faces]
-    if invalid_characters:
-        return False, f"Invalid characters found: {invalid_characters}. Only 'F', 'R', 'B', 'L', 'U', 'D' are allowed."
-    face_counts = {face: scrambled_state.count(face) for face in valid_faces}
-    if any(count != 9 for count in face_counts.values()):
-        return False, f"Invalid face counts: {face_counts}. Each face must appear exactly 9 times."
-    return True, "Valid scrambled state."
-
 GUI_rubiks_cube = {
     "U": [["W", "W", "W"], ["W", "W", "W"], ["W", "W", "W"]],
     "F": [["B", "B", "B"], ["R", "R", "R"], ["R", "R", "R"]],
@@ -224,6 +212,21 @@ def reset(color_key_frame, navigation_frame, message_label, submit_btn):
     selected_color = None
     submit_btn.config(text="Submit")
     message_label.config(text="Reset complete. Redesign the cube.")
+
+
+
+def validate_scrambled_state(scrambled_state):
+    valid_faces = ['F', 'R', 'B', 'L', 'U', 'D']
+    if len(scrambled_state) != 54:
+        return False, f"Invalid state length: {len(scrambled_state)}. It must be exactly 54 characters long."
+    invalid_characters = [char for char in scrambled_state if char not in valid_faces]
+    if invalid_characters:
+        return False, f"Invalid characters found: {invalid_characters}. Only 'F', 'R', 'B', 'L', 'U', 'D' are allowed."
+    face_counts = {face: scrambled_state.count(face) for face in valid_faces}
+    if any(count != 9 for count in face_counts.values()):
+        return False, f"Invalid face counts: {face_counts}. Each face must appear exactly 9 times."
+    return True, "Valid scrambled state."
+
 
 
 def create_cube_gui():
